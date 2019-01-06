@@ -1,7 +1,8 @@
 <template lang="pug">
 .stars
-  .star(v-for="i in [0,1,2,3,4]", :key="i")
-    
+  .star(v-for="i in [1,2,3,4, 5]", :key="i")
+    img(src="/static/products/star-full.png", v-if="i<=star")
+    img(src="/static/products/star.png", v-else)
 </template>
 <script>
 export default {
@@ -16,6 +17,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .stars
+  display flex
   .star
-    color gray
+    margin-right 5px
 </style>

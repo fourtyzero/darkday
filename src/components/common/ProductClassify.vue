@@ -2,12 +2,12 @@
 product-base(:product='product',:myclass="myclass")
   p(slot="description" class="description") {{product.digest}}
   .price(slot="foot") 
-    span $ {{product.specs[0].original_price}}
-    span $ {{product.specs[0].current_price}}
+    span {{product.specs[0].current_price | currency('cn')}}
+    span {{product.specs[0].original_price | currency('cn')}}
     .cart-wrapper
       img(v-if="isInCart", src='/static/logo/cartfull.png', @click.stop="addToCart")
       img(v-else, src='/static/logo/cart2.png', @click.stop="addToCart")
-//- <h1 slot="foot"></h1>
+    slot(name="info")
 </template>
 <script>
 import ProductBase from '@/components/common/ProductBase.vue'

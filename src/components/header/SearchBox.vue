@@ -17,8 +17,18 @@ export default {
       q: ''
     }
   },
+  computed: {
+    page() {
+      return this.$route.name
+    }
+  },
   methods: {
     search() {
+      if(this.page === 'search') {
+        this.$store.commit('search/setParams', {q:this.q, page: 1})
+        this.$store.dispatch('search/search')
+      } else 
+        this.$store.commit('search/setParams', {q:this.q, page: 1})
       this.$router.push({name: 'search', query: {q: this.q}})
     }
   }

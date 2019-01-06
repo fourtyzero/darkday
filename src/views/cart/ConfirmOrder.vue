@@ -1,27 +1,39 @@
 <template lang="pug">
-.confirm-order
+.content.confirm-order
   .addresses-info
     .header
       span 收货人信息
       f-button(secondary, @click="addNewAddress") 使用新地址
     .addresses(v-if="me.addresses.length>0")
-      .address#default-address
-        .left
-          radio(:value="selected === defaultAddress.id", @input="selectAddress(defaultAddress.id)")
-          span {{addr2String(defaultAddress)}}
-        .right
-          span 修改
-          span(@click="deleteAddress(defaultAddress.id)") 删除
       transition-expand
-        .address-wrapper(v-show="expanded")
-          .address(v-for="a in restAddresses", :key="a.id", )
+        .addresses-wrapper(v-show="expanded")
+          .address(v-for="a in upAddresses", :key="a.id", )
             .left
               radio(:value="selected === a.id", @input="selectAddress(a.id)")
               span {{addr2String(a)}}
             .right
               span 修改
               span(@click="deleteAddress(a.id)") 删除
-              span(@click="setDefault(a.id)") 设为默认地址
+              span(@click="setDefault(a.id)", v-if="a.id !== defaultAddress.id") 设为默认地址
+      //- and the selected address
+      .address#seleted-address
+        .left
+          radio(:value="selected === selectedAddress.id", @input="selectAddress(selectedAddress.id)")
+          span {{addr2String(selectedAddress)}}
+        .right
+          span 修改
+          span(@click="deleteAddress(defaultAddress.id)") 删除
+          span(@click="setDefault(selectedAddress.id)", v-if="selectedAddress.id !== defaultAddress.id") 设为默认地址
+      transition-expand
+        .addresses-wrapper(v-show="expanded")
+          .address(v-for="a in downAddresses", :key="a.id", )
+            .left
+              radio(:value="selected === a.id", @input="selectAddress(a.id)")
+              span {{addr2String(a)}}
+            .right
+              span 修改
+              span(@click="deleteAddress(a.id)") 删除
+              span(@click="setDefault(a.id)", v-if="a.id !== defaultAddress.id") 设为默认地址
       .expand
         span(@click="toggleAddresses(true)") 展开其他地址
         span(@click="toggleAddresses(false)") 收起地址
@@ -86,6 +98,15 @@ export default {
     groups() {
       // return items grouped by seller
       return groupBy(this.checkedItems, (item) => item.seller.id)
+    },
+    upAddresses() {
+      const ind = this.addresses.findIndex(x => x.id === this.selected)
+      return this.addresses.slice(0, ind)
+    },
+    downAddresses() {
+      const ind = this.addresses.findIndex(x => x.id === this.selected)
+      return this.addresses.slice(ind + 1)
+
     },
     selectedAddress() {
       return this.addresses.find((a) => a.id === this.selected)

@@ -15,7 +15,7 @@
   f-button(secondary, @click="jump") 跳转
 </template>
 <script>
-import {range} from 'lodash'
+import { range } from 'lodash'
 export default {
   name: 'Paginator',
   props: {
@@ -33,40 +33,48 @@ export default {
   },
   // ['current', 'last', 'first', 'is', 'base', 'max'],
   data() {
-    return {page: this.current}
+    return { page: this.current }
   },
   computed: {
     links() {
-      const w = (this.max-2)/2
-      return range(Math.max(Math.ceil(this.current-w), this.first+1), 
-        Math.min(Math.ceil(this.current+w), this.last))
-    }
+      const w = (this.max - 2) / 2
+      return range(
+        Math.max(Math.ceil(this.current - w), this.first + 1),
+        Math.min(Math.ceil(this.current + w), this.last)
+      )
+    },
   },
   methods: {
     url(x) {
       let u = this.base
-      if(this.base[this.base.length-1] === '/')
-        u = this.base.substring(0, this.base.length-1)
-      if(/\?/.test(this.base)) // has query
-        return `${u}&page=${x}`
+      if (this.base[this.base.length - 1] === '/')
+        u = this.base.substring(0, this.base.length - 1)
+      if (!/\?/.test(this.base))
+        u = `${u}?page=${x}`
+        // has query
       // return `${this.base.substring(0, this.base.length-1)}?page=${x}`
-      return  `${u}?page=${x}`
+      // replace
+      else if(/page=\d*/.test(u)) {
+        u = u.replace(/page=\d*/, `page=${x}`)
+      } else u = `${u}&page=${x}`
+      return u
     },
     prev() {
-      return this.current - 1 < this.first ? '#': this.url(this.current-1)
+      return this.current - 1 < this.first ? '#' : this.url(this.current - 1)
     },
     next() {
-      return this.current+1 > this.last ? '#' : this.url(this.current+1)
+      return this.current + 1 > this.last ? '#' : this.url(this.current + 1)
     },
     jump() {
       this.$router.push(this.url(this.page))
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="stylus" scoped>
 .links
   text-align center
+
   a
     padding 6px 16px
     font-size 16px
@@ -75,14 +83,18 @@ export default {
     color #fff
     text-align center
     margin-right 30px
+
     &.disabled
       background-color gray
+
 .active
   background-color #498E3D
+
 button
   height 30px
   margin-left 10px
   border-radius 0
+
 input
   width 50px
   height 30px

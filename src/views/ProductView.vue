@@ -54,39 +54,23 @@
 
         //- -------------------商品详情&评价 ----------------------
   .tabbar
-    span(:class='{cur_bar:cur==0}', @click='togbar(0), change()') 商品详情
-    span(:class='{cur_bar:cur==1}', @click='togbar(1), change()') 商品评价
+    span(:class='{cur_bar:details}', @click='togbar(0), change()') 商品详情
+    span(:class='{cur_bar:!details}', @click='togbar(1), change()') 商品评价
   .details(v-if='details==true')
     .details_title {{product.name}} 
     .details_description {{product.detail}}
     img(src='/static/products/detail.png')
   .comments(v-else)
-    .comments_left
-      .avatar
-        img(src='/static/products/touxiang.png')
-        .phone 1316****688
-    .comments_right
-      .starts
-        img(src='/static/products/starts2.png')
-        img(src='/static/products/starts2.png')
-        img(src='/static/products/starts2.png')
-        img(src='/static/products/starts2.png')
-        img(src='/static/products/starts2.png')
-        .time 2018.12.31
-      .comment 帮同事买的,很实惠,很好用.
-      .pictuers
-        img(src='/static/products/plt.png')
-        img(src='/static/products/plt.png')
-        img(src='/static/products/plt.png')
-        img(src='/static/products/plt.png')
-      
+    comment(v-for="comment in comments", :comment="comment", :key="comment.id")
+    //- paginator()
 </template>
 <script>
 import axios from 'axios'
 import { mapState } from 'vuex'
 import Magnifier from '@/components/common/Magnifier.vue'
+import Comment from '@/components/Comment'
 export default {
-  components: { Magnifier },
+  components: { Magnifier, Comment },
   data() {
     return {
       details: true,
@@ -95,6 +79,8 @@ export default {
       selected: 0,
       num: 0,
       id: 0,
+      comments: [],
+      paginate: { last: 0 },
       product: {
         images: [
           // "/static/products/goods1.png",
@@ -115,14 +101,32 @@ export default {
     poster() {
       return this.product.images[this.id]
     },
+    page() {
+      return this.$route.query.page
+    },
   },
   created() {
     const pid = this.$route.params.id
     axios.get(`/api/products/${pid}`).then((res) => {
       this.product = res.data
     })
+    this.fetchComments(this.page)
+  },
+  watch: {
+    page() {
+      this.fetchComments(this.page)
+    },
   },
   methods: {
+    fetchComments(page) {
+    const pid = this.$route.params.id
+      axios
+        .get(`/api/products/${pid}/reviews`, { params: { page: this.page } })
+        .then((res) => {
+          this.comments = res.data.data
+          this.paginate.last = res.data.last_page
+        })
+    },
     pre() {
       this.id--
       if (this.id < 0) {
@@ -162,9 +166,9 @@ export default {
     clickCart() {
       if (!this.isInCart) {
         this.add()
-        this.$toast.present({message: '已添加到购物车'})
+        this.$toast.present({ message: '已添加到购物车' })
       } else {
-        this.$toast.present({message: '该商品已经在购物车了'})
+        this.$toast.present({ message: '该商品已经在购物车了' })
       }
     },
     add() {
@@ -415,42 +419,4 @@ export default {
     height 265px
     margin 10px 0
 
-.comments
-  padding 20px 0
-  border-bottom 1px solid #f2f2f2
-  overflow hidden
-
-  .comments_left
-    float left
-
-    .avatar
-      margin-right 30px
-
-      img
-        width 100px
-        height 100px
-
-      .phone
-        font-size 16px
-
-  .comments_right
-    float-right
-    padding 0 20px
-
-    .starts
-      overflow hidden
-
-      img
-        margin 0 2px
-
-      .time
-        float right
-
-    .comment
-      font-size 16px
-      margin 5px 0
-
-    .pictuers
-      img
-        margin 0 1px
 </style>
