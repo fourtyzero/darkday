@@ -5,7 +5,9 @@
   .container
     swiper(class="swiper" :options="swiperOption")
       swiper-slide(class="slide" :key="item.id" v-for="item in product.images")
-        img(:src="item.src")
+        .slide(:style="{'backgroundImage': `url(${item.src})`}")
+        //- img(:src="item.src")
+        //- .slide(:style="{'background-image': '/static/banner/signup.png'}")
       div(class="swiper-pagination"  slot="pagination")
       div(class="swiper-button-prev" slot="button-prev")
       div(class="swiper-button-next" slot="button-next")
@@ -86,10 +88,10 @@ export default {
   data() {
     return {
       swiperOption: {
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false,
-        },
+        // autoplay: {
+        //   delay: 5000,
+        //   disableOnInteraction: false,
+        // },
         pagination: {
             el: '.swiper-pagination',
             clickable: true
@@ -204,7 +206,10 @@ export default {
   width 100vw
   height 500px
   // 热卖商品
-
+.slide
+  background-size cover
+  background-position center
+  height 500px
 .hot
   margin 10px 0
   overflow hidden
@@ -287,5 +292,5 @@ export default {
   height 435px
 .self_img 
   width 300px
-  height 440px
+  // height 440px
 </style>

@@ -2,6 +2,7 @@
 .content.cart-view
   .main(v-if="Object.keys(items).length===0")
     p 你还没有商品
+    f-button(@click="fetchRemote", big, secondary) fetch remote
   .main(v-else)
     .logo
       img(src="/static/logo/cart2.png")
@@ -53,14 +54,21 @@ export default {
     },
   },
   methods: {
+    addNewAddress() {
+
+    },
+    fetchRemote() {
+
+      this.$store.dispatch('cart/fetchRemote')
+    },
     buy() {
-      this.$route.push('/cart/confirm')
+      this.$router.push('/cart/confirm-order')
     },
     selectAll() {
-
+      this.$store.commit('cart/checkAll')
     },
     deleteSelected() {
-
+      this.$store.dispatch('cart/removeChecked')
     }
   },
   watch: {

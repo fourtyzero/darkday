@@ -6,7 +6,7 @@ product-base(:product="product")
       span.current_price.one ${{product.current_price}}
       span.original_price.two ${{product.original_price}}
       img.cart(src="/static/logo/cart2.png")
-    .collect 取消收藏
+    .collect(@click="cancelFav") 取消收藏
 </template>
 <script>
 import ProductBase from './ProductBase'
@@ -16,6 +16,11 @@ export default {
   components: {
     ProductBase,
   },
+  methods: {
+    cancelFav() {
+      this.$store.dispatch('favorite/removeFavorites', [this.product.id])
+    }
+  }
 }
 </script>
 <style lang="stylus" scoped>

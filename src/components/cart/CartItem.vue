@@ -1,7 +1,7 @@
 <template lang='pug'>
 tr.item
   td.one 
-    check-box(:value="item.checked", @input="toggle") 
+    check-box(:value="item.checked", @input="toggle", v-if="!confirmed") 
     img(:src="item.product.images[0]")
     span.digest {{item.product.digest}}
   td {{item.spec.quantity}}个装
@@ -12,7 +12,7 @@ tr.item
     button.jia(@click="itemAlter(1)") +
   td
     span.sum {{sum | currency('cn')}}
-  td 
+  td(v-if="!confirmed") 
     span.del(@click="del()") 删除
   
 </template>
@@ -21,7 +21,14 @@ import CheckBox from '@/base/CheckBox.vue'
 import { mapActions } from 'vuex'
 export default {
   components: { CheckBox },
-  props: ['item'],
+  props: {
+    confirmed: {
+      type: Boolean,
+      default: false,
+    },
+    item: Object,
+  },
+  // ['item', 'confirmed'],
   data() {
     return {
       // number: 1
@@ -58,6 +65,18 @@ table.f-table
     height 120px
 
   tr
+    td:nth-child(1)
+      max-width 30%
+    td:nth-child(2)
+      max-width 12%
+    td:nth-child(3)
+      max-width 15%
+    td:nth-child(4)
+      max-width 20%
+    td:nth-child(5)
+      max-width 15%
+    td:nth-child(6)
+      max-width 13%
     td
       check-box
         vertical-align middle

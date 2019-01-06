@@ -7,6 +7,7 @@ import CartModule from './cart'
 import CategoryModule from './category'
 import SearchModule from './search'
 import FavoriteModule from './favorite'
+import FootprintModule from './footprint'
 
 Vue.use(Vuex)
 
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     category: CategoryModule,
     search: SearchModule,
     favorite: FavoriteModule,
+    footprint: FootprintModule,
   },
   state: {},
   mutations: {},

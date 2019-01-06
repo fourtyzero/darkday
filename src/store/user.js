@@ -1,5 +1,6 @@
 // import $ from 'axios'
 import { http } from '@/utils'
+import remove from 'lodash'
 import Vue from 'vue'
 import axios from 'axios'
 const init = {
@@ -11,6 +12,7 @@ const init = {
   mobile: '',
   avatar: '',
   sex: 0,
+  default_address: '',
   addresses: [],
 }
 export default {
@@ -41,6 +43,12 @@ export default {
       Object.keys(payload).forEach((k) => {
         Vue.set(state.me, k, payload[k])
       })
+    },
+    addAddresses(state, addrs) {
+      addrs.forEach((a) => state.me.addresses.push(a))
+    },
+    deleteAddress(state, { id }) {
+      remove(state.me.addresses, (a) => a.id === id)
     },
   },
   actions: {
@@ -90,6 +98,7 @@ export default {
               commit('login', data)
               // and fetch user favortes
               dispatch('favorite/fetchFavorites', {}, { root: true })
+              dispatch('cart/fetchRemote', {}, { root: true })
             })
             .catch((err) => {
               state.logging = false
@@ -98,6 +107,26 @@ export default {
             })
         }
       }, 2500)
+    },
+    addAddress({ commit, rootState }, payload) {
+      http
+        .withToken(rootState.user.me.token)
+        .post('/api/me/address/create', payload)
+        .then((res) => {
+          commit('addAddresses', [res.data])
+        })
+    },
+    deleteAddress({ commit, rootState }, payload) {
+      commit('deleteAddress', payload)
+      http
+        .withToken(rootState.user.me.token)
+        .post('/api/me/address/delete', { address_id: payload.id })
+    },
+    setDefaultAddress({ state, rootState }, id) {
+      state.me.default_address = id
+      http
+        .withToken(rootState.user.me.token)
+        .post('/api/me/address/default', { address_id: id })
     },
   },
 }

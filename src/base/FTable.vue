@@ -9,6 +9,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
 table.f-table
+  table-layout fixed
   width 100% 
   text-align center
   border-collapse collapse

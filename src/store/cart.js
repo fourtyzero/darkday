@@ -18,14 +18,15 @@ export default {
     },
     addItems(state, items) {
       items.forEach((item) => {
-        state.items[item.id] = item
+        // state.items[item.id] = item
+        Vue.set(state.items, item.id, item)
       })
     },
     alterItem(state, { id, change }) {
       state.items[id].quantity += change
       if (state.items[id].quantity <= 0) {
         state.items[id].quantity = 0
-        state.items[id].checked = false 
+        state.items[id].checked = false
       }
     },
     setChecked(state, payload) {
@@ -36,6 +37,9 @@ export default {
         const { items, checked } = payload
         items.forEach((id) => (state.items[id].checked = checked))
       }
+    },
+    checkAll(state) {
+      Object.keys(state.items).forEach((k) => (state.items[k].checked = true))
     },
     removeItem(state, { id }) {
       Vue.delete(state.items, id)
@@ -50,11 +54,14 @@ export default {
     fetchRemote({ commit, rootState }) {
       http
         .withToken(rootState.user.me.token)
-        .get('/api/me/cart')
+        .get('/api/me/cart/all')
         .then((res) => {
           // add checked to true
           const d = res.data.map((i) => {
             i.checked = true
+            const spec = i.product.specs.find((s) => s.quantity === i.spec)
+            i.spec = spec ? spec : i.product.specs[0]
+            i.seller = i.product.seller
             return i
           })
           commit('addItems', d)
@@ -100,6 +107,13 @@ export default {
         .post('/api/me/cart/alter', { id, quantity: state.items[id].quantity })
     },
     removeItems({ commit, rootState }, items) {
+      commit('removeItems', items)
+      http
+        .withToken(rootState.user.me.token)
+        .post('/api/me/cart/delete', { items })
+    },
+    removeChecked({ state, commit, rootState }) {
+      const items = Object.keys(state.items)
       commit('removeItems', items)
       http
         .withToken(rootState.user.me.token)

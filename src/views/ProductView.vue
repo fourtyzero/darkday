@@ -160,9 +160,12 @@ export default {
       this.details = !this.details
     },
     clickCart() {
-      if (!this.isInCart)
-        // return this.$store.dispatch('cart/removeItems', [this.product.id])
+      if (!this.isInCart) {
         this.add()
+        this.$toast.present({message: '已添加到购物车'})
+      } else {
+        this.$toast.present({message: '该商品已经在购物车了'})
+      }
     },
     add() {
       this.$store.dispatch('cart/addItem', {

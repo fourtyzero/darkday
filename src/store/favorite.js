@@ -34,7 +34,7 @@ export default {
       commit('removeFavorites', pids)
       http
         .withToken(rootState.user.me.token)
-        .post('/api/me/favorites/delete', { favorites: pids })
+        .post('/api/me/favorite/delete', { favorites: pids })
     },
     addFavorites({ state, commit, rootState }, payload) {
       // [product]
@@ -42,7 +42,7 @@ export default {
       const pids = payload.map((p) => p.id)
       http
         .withToken(rootState.user.me.token)
-        .post('/api/me/favorites/add', { favorites: pids })
+        .post('/api/me/favorite/add', { favorites: pids })
         .then((res) => {
           // return real ids, should be an assoc-array
           const ids = res.data

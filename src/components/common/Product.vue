@@ -22,7 +22,7 @@ export default {
   props:['product','myclass']
 };
 </script>
-<style lang='stylus'scoped>
+<style lang='stylus' scoped>
 .product
   width 305px
   height 435px

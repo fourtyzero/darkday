@@ -4,6 +4,7 @@ import AboutView from '@/views/AboutView'
 import CartView from '@/views/CartView'
 import CategoryView from '@/views/CategoryView'
 import CityView from '@/views/CityView'
+import ConfirmOrder from '@/views/cart/ConfirmOrder'
 import EntryView from '@/views/EntryView'
 import FridayView from '@/views/FridayView'
 import HomeView from '@/views/HomeView'
@@ -88,6 +89,10 @@ const router = new Router({
       component: CartView,
       name: 'cart',
       requiresAuth: process.env.VUE_APP_STAGE === 'play' ? false : true,
+    },
+    {
+      path: '/cart/confirm-order',
+      component: ConfirmOrder,
     },
     {
       path: '/cart/order/:oid',

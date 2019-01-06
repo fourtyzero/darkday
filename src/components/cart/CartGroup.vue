@@ -1,26 +1,25 @@
 <template lang='pug'>
-
 f-table
   thead
     tr.head
       th.one
-        check-box(:value="checked", @input="toggleAll")
-        span 店铺名称 {{seller.name}}
+        check-box(:value="checked", @input="toggleAll", v-if="!confirmed")
+        span {{seller.name}}
       th 规格
       th 单价
       th 数量
       th 金额
-      th 操作
+      th(v-if="!confirmed") 操作
   tbody
-    cart-item(v-for="item in items", :key="item.key", :item="item")
+    cart-item(v-for="item in items", :key="item.key", :item="item", :confirmed="confirmed")
   tfoot
     tr.foot 
-      th.one
-      th 
-      th
-      th
-      th 
-      th 
+      td.one
+      td 
+      td
+      td
+      td(v-if="!confirmed") 
+      td 
         span.total 商品金额:
         span.totalmoney ￥{{total}}
   
@@ -29,7 +28,13 @@ f-table
 import CartItem from '@/components/cart/CartItem.vue'
 export default {
   components: { CartItem },
-  props: ['items'],
+  props: {
+    confirmed: {
+      type: Boolean,
+      default: false,
+    },
+    items: Array,
+  },
   data() {
     return {
       // total: "999.99"
@@ -61,7 +66,19 @@ table.f-table
   tfoot
     .foot
       height 120px
-
+  tr.head
+    th:nth-child(1)
+      max-width 30%
+    th:nth-child(2)
+      max-width 12%
+    th:nth-child(3)
+      max-width 15%
+    th:nth-child(4)
+      max-width 20%
+    th:nth-child(5)
+      max-width 15%
+    th:nth-child(6)
+      max-width 13%
 .one
   text-align left
   padding-left 30px
