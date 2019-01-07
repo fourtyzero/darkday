@@ -43,7 +43,7 @@
         hr
         h3 开票信息
         .ticket-info
-          radio
+          radio()
           span 不需要
           radio
           span 个人
@@ -51,11 +51,11 @@
           span 单位
         .ticket
           span 发票抬头:
-          input
+          input(ref="tickets")
           span * 请填写后核对信息
         hr
         h3 添加订单备注
-        input()
+        input(ref="notes")
     .choose-time
       h3 次日达.礼拜五专享
       div 选择送达时间 {{deliveryTime}}
@@ -69,7 +69,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import {groupBy, pickBy} from 'lodash'
+import { groupBy, pickBy } from 'lodash'
 import CartGroup from '@/components/cart/CartGroup'
 
 export default {
@@ -93,20 +93,19 @@ export default {
       return this.me.addresses
     },
     checkedItems() {
-      return pickBy(this.items, (i => i.checked))
+      return pickBy(this.items, (i) => i.checked)
     },
     groups() {
       // return items grouped by seller
       return groupBy(this.checkedItems, (item) => item.seller.id)
     },
     upAddresses() {
-      const ind = this.addresses.findIndex(x => x.id === this.selected)
+      const ind = this.addresses.findIndex((x) => x.id === this.selected)
       return this.addresses.slice(0, ind)
     },
     downAddresses() {
-      const ind = this.addresses.findIndex(x => x.id === this.selected)
+      const ind = this.addresses.findIndex((x) => x.id === this.selected)
       return this.addresses.slice(ind + 1)
-
     },
     selectedAddress() {
       return this.addresses.find((a) => a.id === this.selected)
@@ -118,7 +117,10 @@ export default {
       return this.addresses.filter((a) => a.id !== this.selected)
     },
     totalPrice() {
-      return Object.values(this.checkedItems).reduce((sum, i) => sum + i.quantity * i.spec.current_price, 0)
+      return Object.values(this.checkedItems).reduce(
+        (sum, i) => sum + i.quantity * i.spec.current_price,
+        0
+      )
     },
     redeems() {
       return Math.ceil(this.totalPrice / 10)
@@ -126,11 +128,11 @@ export default {
   },
   methods: {
     addr2String(a) {
-      return `${a.contact} ${a.province.name}${a.region.name}${a.city.name}${a.detail}`
+      return `${a.contact} ${a.province.name}${a.region.name}${a.city.name}${
+        a.detail
+      }`
     },
-    addNewAddress() {
-
-    },
+    addNewAddress() {},
     setDefault(id) {
       this.$store.dispatch('user/setDefaultAddress', id)
     },
@@ -144,8 +146,14 @@ export default {
       this.expanded = f
     },
     submit() {
-
-    }
+      this.$store.dispatch('cart/confirmOrder', {
+        cb: (id) => {
+          this.$router.push({name: 'to-pay', params: { id } })
+        },
+        address_id: this.selected,
+        // extra: 
+      })
+    },
   },
 }
 </script>
@@ -154,11 +162,14 @@ export default {
   display flex
   justify-content space-between
   background #F4FFF2
+
 .price
   color red
+
 .header
   display flex
   justify-content space-between
+
 .footer
   display flex
   flex-direction column

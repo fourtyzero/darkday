@@ -5,6 +5,7 @@ import CartView from '@/views/CartView'
 import CategoryView from '@/views/CategoryView'
 import CityView from '@/views/CityView'
 import ConfirmOrder from '@/views/cart/ConfirmOrder'
+import ConfirmSuccess from '@/views/cart/ConfirmSuccess'
 import EntryView from '@/views/EntryView'
 import FridayView from '@/views/FridayView'
 import HomeView from '@/views/HomeView'
@@ -14,6 +15,7 @@ import NavView from '@/views/NavView'
 import OrderView from '@/views/OrderView'
 import SearchResultView from '@/views/SearchResultView'
 import SellerView from '@/views/SellerView'
+import PaySuccess from '@/views/cart/PaySuccess'
 import ProductView from '@/views/ProductView'
 
 import NotFoundView from '@/views/404.vue'
@@ -93,6 +95,16 @@ const router = new Router({
     {
       path: '/cart/confirm-order',
       component: ConfirmOrder,
+    },
+    {
+      path: '/cart/to-pay/:id',
+      component: ConfirmSuccess,
+      name: 'to-pay',
+    },
+    {
+      path: '/cart/pay-success/:id',
+      component: PaySuccess,
+      name: 'paysuccess',
     },
     {
       path: '/cart/order/:oid',

@@ -1,7 +1,7 @@
 <template lang='pug'>
 .navs
   span(@mouseover="show()" @mouseleave="hide()")
-    router-link(to="") 分类
+    router-link(to="#") 分类
     ul(v-show="isShow", @mouseout="selectTab(0)")
       li(v-for="item in classify", @mouseover="selectTab(item.id)", :key="item.id", )
         img(:src="item.img")
@@ -81,7 +81,6 @@ export default {
 
   span
     display inline-block
-    padding 15px 0
 
     &:hover
       background-color #f08200
@@ -92,11 +91,14 @@ export default {
   a
     display inline-block
     box-sizing border-box
-    padding 0 60px
+    padding 15px 60px
     font-size 16px
     border-right 1px solid #dddddd
     text-decoration none
     color #000
+    &.router-link-active
+      background-color #f08200
+      color #fff
 
 .navs span:hover, .navs span:hover a
   color #fff

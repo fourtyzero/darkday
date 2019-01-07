@@ -1,5 +1,6 @@
 <template lang='pug'>
 .content
+  nav-bar
   .location
     span 您当前的位置 :
     router-link(:to="{name:'home'}") 

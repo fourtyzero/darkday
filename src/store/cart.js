@@ -49,6 +49,11 @@ export default {
         Vue.delete(state.items, ids[i])
       }
     },
+    removeChecked(state) {
+      Object.keys(state.items).forEach((i) => {
+        if (i.checked) Vue.delete(state.items, i.id)
+      })
+    },
   },
   actions: {
     fetchRemote({ commit, rootState }) {
@@ -67,7 +72,34 @@ export default {
           commit('addItems', d)
         })
     },
-
+    payOrder({ rootState }, { orderId }) {
+      http
+        .withToken(rootState.user.me.token)
+        .post('/api/me/order/pay', { order_id: orderId })
+    },
+    confirmOrder(
+      { commit, state, rootState },
+      { cb, items, address_id, extra }
+    ) {
+      const checked = Object.values(state.items)
+        .filter((i) => i.checked)
+        .map((i) => ({
+          product_id: i.product.id,
+          quantity: i.quantity,
+          price: i.spec.current_price,
+          spec: i.spec.quantity,
+        }))
+      // remove all checked items in store
+      commit('removeChecked')
+      // will send all checked items as an order
+      http
+        .withToken(rootState.user.me.token)
+        .post('/api/me/order/create', { address_id, items: checked })
+        .then((res) => {
+          cb(res.data.id)
+        })
+      // .then()
+    },
     addItem({ state, commit, rootState }, payload) {
       const { item } = payload
       // make a guard, can not add same product twice
