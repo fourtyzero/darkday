@@ -61,7 +61,7 @@ export default {
           state.me.addresses = res.data
         })
     },
-    logout({ commit }) {
+    logout({ commit, dispatch }) {
       // http
       //   .withToken(state.me.token)
       //   .post('/api/user/logout')
@@ -69,6 +69,7 @@ export default {
       //     commit('logout')
       //   })
       commit('logout')
+      dispatch('cart/clear', {}, { root: true })
     },
     login({ state, commit, dispatch }, payload) {
       state.logging = true

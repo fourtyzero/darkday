@@ -16,7 +16,8 @@
         div.point {{(me.money||0) | currency('cn')}} 
       .block
         //- router-link(to="/me/") TODO:
-        div 充值有礼
+        div
+          router-link(to="/me/wallet") 充值有礼
         div 充值卡兑换
   .second 
     //- TODO: add the banner

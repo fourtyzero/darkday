@@ -88,10 +88,10 @@ export default {
   data() {
     return {
       swiperOption: {
-        // autoplay: {
-        //   delay: 5000,
-        //   disableOnInteraction: false,
-        // },
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false,
+        },
         pagination: {
             el: '.swiper-pagination',
             clickable: true

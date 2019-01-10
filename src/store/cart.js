@@ -54,8 +54,14 @@ export default {
         if (i.checked) Vue.delete(state.items, i.id)
       })
     },
+    clear(state) {
+      state.items = {}
+    },
   },
   actions: {
+    clear({ commit }) {
+      commit('clear')
+    },
     fetchRemote({ commit, rootState }) {
       http
         .withToken(rootState.user.me.token)

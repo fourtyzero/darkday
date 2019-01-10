@@ -3,7 +3,7 @@
   .top.clearfix
     span 订单号: {{order.id}}
     span 下单日期: {{order.date | dateFormat('YYYY.MM.DD HH:mm:ss')}}
-    span.seller {{order.seller.name}}
+    span.seller {{order.seller && order.seller.name}}
     span.fr 订单状态:
       span.status {{getStatus(order.status)}}
   .main.clearfix
